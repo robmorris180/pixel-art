@@ -26,12 +26,28 @@ export default {
     };
   },
   mounted() {
+    if (localStorage.getItem("pixels")) {
+      try {
+        this.pixels = JSON.parse(localStorage.getItem("pixels"));
+      } catch (error) {
+        localStorage.removeItem("pixels");
+      }
+    }
+
     this.$root.$on("update:color", color => {
       this.color = color;
     });
+
     this.$root.$on("clicked:pixel", index => {
       this.pixels.splice(index, 1, this.color);
+      this.saveDrawing();
     });
+  },
+  methods: {
+    saveDrawing() {
+      const parsed = JSON.stringify(this.pixels);
+      localStorage.setItem("pixels", parsed);
+    }
   }
 };
 </script>
